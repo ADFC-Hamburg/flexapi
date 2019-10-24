@@ -22,7 +22,6 @@ class SmtpMailService implements IfMailService {
             $this->mailer->Password = $smtpCredentials['password'];
         }
 
-        $this->mailer->isHTML(true);
         $this->mailer->CharSet = 'UTF-8';
         $this->mailer->Encoding = 'quoted-printable';
 
@@ -44,8 +43,14 @@ class SmtpMailService implements IfMailService {
         }
 
         $this->mailer->Subject = $subject;
-        $this->mailer->Body    = $body;
-        $this->mailer->AltBody = $altBody; // for non-HTML clients
+        if ($body == null) {
+          $this->mailer->isHTML(false);
+          $this->mailer->Body    = $altBody;
+        } else {
+          $this->mailer->isHTML(true);
+          $this->mailer->Body    = $body;
+          $this->mailer->AltBody = $altBody; // for non-HTML clients
+        }
 
         $this->mailer->send();
     }
