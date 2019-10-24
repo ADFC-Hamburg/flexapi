@@ -437,11 +437,15 @@ class DataModel {
         if ($config['format'] === "key") {
             $content = $referenceId;
         } elseif ($config['format'] === "data") {
-            $content = $this->read($reference['referencedEntity'], [
-                'references' => $config,
-                'filter' => [$referenceIdName => $referenceId],
-                'flatten' => 'singleResult'
-            ]);
+            if ($this->guard->userMay('read', $reference['referencedEntity'])) {
+                $content = $this->read($reference['referencedEntity'], [
+                    'references' => $config,
+                    'filter' => [$referenceIdName => $referenceId],
+                    'flatten' => 'singleResult'
+                ]);
+            } else {
+                $content = $referenceId;
+            }
         } elseif ($config['format'] === "url") {
             $content = $this->makeResourceUrl($reference['referencedEntity'], $referenceIdName, $referenceId);
         }
