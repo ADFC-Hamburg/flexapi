@@ -28,6 +28,10 @@ class SmtpMailService implements IfMailService {
         $this->mailer->setFrom($from['address'], $from['name']);
     }
 
+    public function addReplyTo($address, $name) {
+        $this->mailer->addReplyTo($address, $name);
+    }
+
     public function send($to, $subject, $body, $altBody = '', $cc = []) {
         if (!is_array($to)) {
             $to = [$to];
